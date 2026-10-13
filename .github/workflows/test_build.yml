@@ -1,0 +1,47 @@
+name: Test Full Build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build all platforms
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+
+      - name: Determine JDK version
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          VER="${BRANCH#mc}"
+          if [[ ! "$VER" =~ ^[0-9] ]]; then
+            echo "JAVA_VER=21" >> "$GITHUB_ENV"
+          elif [ "$(printf '%s\n' "26.1.2" "$VER" | sort -V | head -n1)" = "26.1.2" ]; then
+            echo "JAVA_VER=25" >> "$GITHUB_ENV"
+          else
+            echo "JAVA_VER=21" >> "$GITHUB_ENV"
+          fi
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VER }}
+          distribution: temurin
+          cache: gradle
+
+      - name: Build all platform jars
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean buildAll
+
+      - name: Upload test build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: concerto-test-build-${{ github.ref_name }}-${{ github.run_number }}
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 14
