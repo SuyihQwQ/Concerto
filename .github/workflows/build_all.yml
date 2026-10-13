@@ -179,6 +179,11 @@ jobs:
            echo "paper_gv=$GV_ARRAY" >> $GITHUB_OUTPUT
            echo "paper_name=paper-${SHORTER_VERSION}-mc${MC_VER}" >> $GITHUB_OUTPUT
            echo "paper_display=Concerto ${SHORTER_VERSION} for Paper ${MC_VER}" >> $GITHUB_OUTPUT
+          elif echo "$FNAME" | grep -iq "velocity"; then
+           echo "velocity_file=$FILE" >> $GITHUB_OUTPUT
+           echo "velocity_mc=$MC_VER" >> $GITHUB_OUTPUT
+           echo "velocity_name=velocity-${SHORTER_VERSION}-mc${MC_VER}" >> $GITHUB_OUTPUT
+           echo "velocity_display=Concerto ${SHORTER_VERSION} for Velocity (Minecraft ${MC_VER})" >> $GITHUB_OUTPUT
           fi
           done
 
@@ -190,10 +195,11 @@ jobs:
           FABRIC_FILE: ${{ steps.build-run.outputs.fabric_file }}
           NEOFORGE_FILE: ${{ steps.build-run.outputs.neoforge_file }}
           PAPER_FILE: ${{ steps.build-run.outputs.paper_file }}
+          VELOCITY_FILE: ${{ steps.build-run.outputs.velocity_file }}
         run: |
           set -euo pipefail
           files=()
-          for file in "$FABRIC_FILE" "$NEOFORGE_FILE" "$PAPER_FILE"; do
+          for file in "$FABRIC_FILE" "$NEOFORGE_FILE" "$PAPER_FILE" "$VELOCITY_FILE"; do
             if [ -n "$file" ]; then
               files+=("$file")
             fi
@@ -336,4 +342,7 @@ jobs:
           fi
           if [ -n "${{ steps.build-run.outputs.paper_file }}" ]; then
             echo "- **Paper**: Processed ${{ steps.build-run.outputs.paper_display }} (${{ steps.build-run.outputs.paper_name }}; published or already present)" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -n "${{ steps.build-run.outputs.velocity_file }}" ]; then
+            echo "- **Velocity**: Built ${{ steps.build-run.outputs.velocity_display }} (${{ steps.build-run.outputs.velocity_name }}; attached to the GitHub Release)" >> $GITHUB_STEP_SUMMARY
           fi

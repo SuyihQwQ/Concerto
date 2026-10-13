@@ -1,30 +1,30 @@
 <div align="center">
   <img src="icon-large.png" alt="Concerto" width="256">
   <h1>Concerto</h1>
-  <p><b>Minecraft 游戏内音乐播放器 — Fabric / NeoForge 客户端，Paper 服务端插件</b></p>
+  <p><b>Minecraft 游戏内音乐播放器 — Fabric / NeoForge 客户端，Paper 插件与 Velocity 代理插件</b></p>
   <p>
     <a href="https://modrinth.com/mod/A0VZd1kW"><img src="https://img.shields.io/modrinth/dt/A0VZd1kW?logo=modrinth&label=Modrinth" alt="Modrinth 下载量"></a>
     <a href="https://github.com/GregTaoo/Concerto/releases"><img src="https://img.shields.io/github/v/release/GregTaoo/Concerto?logo=github&label=Release" alt="GitHub Release"></a>
     <img src="https://img.shields.io/badge/Minecraft-1.20.1%20%7C%201.20.6%20%7C%201.21.1%20%7C%201.21.6%20%7C%201.21.11%20%7C%2026.1.2%20%7C%2026.2-62b47a?logo=minecraft" alt="Minecraft 1.20.1、1.20.6、1.21.1、1.21.6、1.21.11、26.1.2 和 26.2">
     <img src="https://img.shields.io/badge/Java-21+-f89820?logo=openjdk&logoColor=white" alt="Java 21+">
-    <img src="https://img.shields.io/badge/加载器-Fabric%20%7C%20NeoForge%20%7C%20Paper-8a2be2" alt="Fabric | NeoForge | Paper">
+    <img src="https://img.shields.io/badge/平台-Fabric%20%7C%20NeoForge%20%7C%20Paper%20%7C%20Velocity-8a2be2" alt="Fabric | NeoForge | Paper | Velocity">
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue" alt="License"></a>
   </p>
   <p><a href="README.md">English</a> | 简体中文</p>
 </div>
 
-> 不用切出游戏就能听歌：本地文件、网络直链，以及网易云音乐、QQ 音乐、酷狗音乐。还可以和朋友在同一间音乐室同步听歌，或开启全服点播，让大家轮流点歌。
+> 不用切出游戏就能听歌：本地文件、网络直链、哔哩哔哩视频音轨（DASH），以及网易云音乐、QQ 音乐、酷狗音乐。还可以和朋友在同一间音乐室同步听歌，或开启全服点播，让大家轮流点歌。
 
 ---
 
 ## ✨ 功能亮点
 
-- **多来源，一个播放器** —— 网易云音乐、QQ 音乐、酷狗音乐、本地音频文件（支持拖放导入）、HTTP 直链，都在同一条播放队列里。
+- **多来源，一个播放器** —— 网易云音乐、QQ 音乐、酷狗音乐、哔哩哔哩视频音轨（DASH）、本地音频文件（支持拖放导入）、HTTP 直链，都在同一条播放队列里。
 - **顺畅播放** —— 拖动进度条即可跳转，流媒体加载时也能继续收听；如果默认输出不合适，还可切换音频输出方式。支持 MP3、OGG/Opus、FLAC、WAV、M4A/AAC 和 AIFF。
 - **音乐室（一起听）** —— 同一房间的成员实时共享播放状态：同一首歌、同一进度、同步暂停。房间可以命名、公开展示，在房间列表界面一键加入，也可以凭 UUID 加入。
 - **全服点播（KTV 模式）** —— 玩家给全服排队点歌，可以发起投票切歌；没人点歌时自动播放服务器预设歌单。
 - **共享账号与预设歌单** —— 服主可以为服务器配置自己已登录的音乐服务账号，并把整理好的歌单分享给所有玩家。
-- **跨平台** —— 客户端支持 Fabric 和 NeoForge；插件服可用专属 Paper 插件，模组客户端在插件服上同样能用全部服务端功能。
+- **跨平台** —— 客户端支持 Fabric 和 NeoForge；服务端可使用 Fabric、NeoForge、Paper 插件，或把服务端功能独立运行在 Velocity 代理上。
 
 ---
 
@@ -35,10 +35,13 @@
 | **Fabric 客户端** | `Concerto-mc<版本>-fabric-<模组版本>.jar` + [Fabric API](https://modrinth.com/mod/fabric-api) |
 | **NeoForge 客户端** | `Concerto-mc<版本>-neoforge-<模组版本>.jar` |
 | **Paper 服务端** | `Concerto-mc<版本>-paper-<模组版本>.jar` 放进 `plugins/` |
+| **Velocity 代理** | `Concerto-mc<版本>-velocity-<模组版本>.jar` 放进 Velocity 的 `plugins/` |
 
 Concerto 会把设置、歌单、下载内容和登录信息保存在游戏或服务端目录旁的 `Concerto/` 文件夹中。
 
-单人游戏和未安装 Concerto 的服务器中，都可以把它当作本地播放器使用；音乐室、音乐分享和全服点播等联机功能则需要服务端也安装 Concerto（Fabric、NeoForge 或 Paper 均可）。
+单人游戏和未安装 Concerto 的服务器中，都可以把它当作本地播放器使用。联机功能可由后端 Fabric / NeoForge / Paper 端提供，也可以只在 Velocity 代理安装 Velocity 插件；使用后者时，后端无需安装 Concerto。Velocity 插件的数据和配置写入代理工作目录下的 `Concerto/`。
+
+Velocity 权限由代理的权限管理插件配置：`concerto.admin` 管理配置和点歌机，`concerto.audit` 审核分享，`concerto.room.create` 创建音乐室。
 
 ---
 

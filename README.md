@@ -1,30 +1,30 @@
 <div align="center">
   <img src="icon-large.png" alt="Concerto" width="256">
   <h1>Concerto</h1>
-  <p><b>An in-game music player for Minecraft — Fabric / NeoForge client, Paper server plugin</b></p>
+  <p><b>An in-game music player for Minecraft — Fabric / NeoForge client, Paper plugin, and Velocity proxy plugin</b></p>
   <p>
     <a href="https://modrinth.com/mod/A0VZd1kW"><img src="https://img.shields.io/modrinth/dt/A0VZd1kW?logo=modrinth&label=Modrinth" alt="Modrinth Downloads"></a>
     <a href="https://github.com/GregTaoo/Concerto/releases"><img src="https://img.shields.io/github/v/release/GregTaoo/Concerto?logo=github&label=Release" alt="GitHub Release"></a>
     <img src="https://img.shields.io/badge/Minecraft-1.20.1%20%7C%201.20.6%20%7C%201.21.1%20%7C%201.21.6%20%7C%201.21.11%20%7C%2026.1.2%20%7C%2026.2-62b47a?logo=minecraft" alt="Minecraft 1.20.1, 1.20.6, 1.21.1, 1.21.6, 1.21.11, 26.1.2, and 26.2">
     <img src="https://img.shields.io/badge/Java-21+-f89820?logo=openjdk&logoColor=white" alt="Java 21+">
-    <img src="https://img.shields.io/badge/Loaders-Fabric%20%7C%20NeoForge%20%7C%20Paper-8a2be2" alt="Fabric | NeoForge | Paper">
+    <img src="https://img.shields.io/badge/Platforms-Fabric%20%7C%20NeoForge%20%7C%20Paper%20%7C%20Velocity-8a2be2" alt="Fabric | NeoForge | Paper | Velocity">
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-blue" alt="License"></a>
   </p>
   <p>English | <a href="README_zh.md">简体中文</a></p>
 </div>
 
-> Play local files, direct URLs, and music services – NetEase Cloud Music, QQ Music, and KuGou Music – without leaving the game. Listen together in shared music rooms, or let the whole server take turns choosing songs.
+> Play local files, direct URLs, Bilibili video audio via DASH, and music services – NetEase Cloud Music, QQ Music, and KuGou Music – without leaving the game. Listen together in shared music rooms, or let the whole server take turns choosing songs.
 
 ---
 
 ## ✨ Features
 
-- **Many sources, one player** — NetEase Cloud Music, QQ Music, KuGou Music, local audio files (drag & drop), and direct HTTP links.
+- **Many sources, one player** — NetEase Cloud Music, QQ Music, KuGou Music, Bilibili video audio (DASH), local audio files (drag & drop), and direct HTTP links.
 - **Smooth playback** – drag the progress bar to move through a track, keep listening while streams load, and choose an audio output option if the default does not suit your setup. Supported formats include MP3, OGG/Opus, FLAC, WAV, M4A/AAC, and AIFF.
 - **Music rooms (listen together)** — members of a room share playback in real time: the same track, the same position, the same pauses. Rooms can be named, listed publicly, and joined from a browser screen or by UUID.
 - **Server-wide queue (KTV mode)** — players queue songs for the whole server, vote to skip, and the server falls back to preset radios when the queue is empty.
 - **Shared access & preset playlists** – server owners can configure their own supported music-service accounts for the server and share curated playlists with everyone.
-- **Cross-platform** — Fabric and NeoForge on the client; a dedicated Paper plugin lets modded clients use every server feature on plugin servers.
+- **Cross-platform** — Fabric and NeoForge on the client; server features run on Fabric, NeoForge, Paper, or independently on a Velocity proxy.
 
 ---
 
@@ -35,10 +35,13 @@
 | **Fabric client** | `Concerto-mc<version>-fabric-<mod version>.jar` + [Fabric API](https://modrinth.com/mod/fabric-api) |
 | **NeoForge client** | `Concerto-mc<version>-neoforge-<mod version>.jar` |
 | **Paper server** | `Concerto-mc<version>-paper-<mod version>.jar` into `plugins/` |
+| **Velocity proxy** | `Concerto-mc<version>-velocity-<mod version>.jar` into the proxy's `plugins/` |
 
 Concerto stores its settings, playlists, downloads, and sign-in data in the `Concerto/` folder next to the game or server directory.
 
-You can use Concerto as a local player in singleplayer and on servers that do not have it installed. Shared rooms, sharing, and the server-wide queue need Concerto on the server too (Fabric, NeoForge, or Paper).
+You can use Concerto as a local player in singleplayer and on servers that do not have it installed. Shared rooms, sharing, and the server-wide queue can be provided by a Fabric / NeoForge / Paper server component or by the Velocity plugin alone; backend servers do not need Concerto when using the proxy plugin. Velocity stores its settings and data in `Concerto/` under the proxy working directory.
+
+Configure proxy permissions with your permissions plugin: `concerto.admin` manages the plugin and server queue, `concerto.audit` reviews sharing requests, and `concerto.room.create` allows creating music rooms.
 
 ---
 

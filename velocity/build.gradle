@@ -1,0 +1,25 @@
+repositories {
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+}
+
+configurations {
+    my.canBeResolved(true)
+    implementation.extendsFrom(my)
+}
+
+dependencies {
+    compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
+    my(project(path: ":core", configuration: "shadow")) { transitive = false }
+}
+
+jar {
+    enabled = false
+    dependsOn(shadowJar)
+}
+
+shadowJar {
+    configurations = [project.configurations.my]
+    archiveClassifier = null
+    exclude("top/gregtao/concerto/libs/**")
+}
