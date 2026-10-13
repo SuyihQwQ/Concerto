@@ -10,6 +10,7 @@ import top.gregtao.concerto.ConcertoClient;
 import top.gregtao.concerto.core.player.MusicPlayer;
 import top.gregtao.concerto.core.player.MusicPlayerHandler;
 import top.gregtao.concerto.core.room.MusicRoom;
+import top.gregtao.concerto.core.util.ConcertoRunner;
 import top.gregtao.concerto.network.ClientMusicNetworkHandler;
 import top.gregtao.concerto.screen.MusicAuditionScreen;
 
@@ -39,5 +40,10 @@ public class MinecraftMixin {
     public void closeInject(CallbackInfo ci) {
         MusicPlayer.shutdownAll();
         ConcertoClient.LOGGER.info("Client is closing, Concerto resources released.");
+    }
+
+    @Inject(at = @At("HEAD"), method = "disconnectFromWorld")
+    private static void disconnectInject(CallbackInfo ci) {
+        ConcertoRunner.run(() -> MusicPlayerHandler.INSTANCE.setPaused(true));
     }
 }

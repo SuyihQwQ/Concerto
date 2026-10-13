@@ -5,8 +5,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import net.minecraft.util.FormattedCharSequence;
 import top.gregtao.concerto.core.config.ClientConfig;
 import top.gregtao.concerto.core.music.Music;
@@ -58,7 +60,7 @@ public class MusicInfoScreen extends ConcertoScreen {
 
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            this.renderScrollbar(graphics);
+            this.renderScrollbar(graphics, mouseX, mouseY);
         }
 
         @Override
@@ -221,21 +223,21 @@ public class MusicInfoScreen extends ConcertoScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.lyricScrollbar.updateScrolling(mouseX, mouseY, button)) return true;
-        return super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubled) {
+        if (this.lyricScrollbar.updateScrolling(event)) return true;
+        return super.mouseClicked(event, doubled);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (this.lyricScrollbar.mouseDragged(mouseX, mouseY, button, dragX, dragY)) return true;
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+        if (this.lyricScrollbar.mouseDragged(event, dragX, dragY)) return true;
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) this.lyricScrollbar.onRelease(mouseX, mouseY);
-        return super.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        if (event.button() == 0) this.lyricScrollbar.onRelease(event);
+        return super.mouseReleased(event);
     }
 
     private int lyricContentY() {

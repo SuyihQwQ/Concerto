@@ -6,7 +6,11 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import top.gregtao.concerto.core.enums.OrderType;
 import top.gregtao.concerto.core.event.ConcertoEvents;
@@ -99,8 +103,9 @@ public class MainPlaylistScreen extends ApplyDraggedFileScreen {
         this.addRenderableWidget(this.playButton);
         x += wideButtonW + STANDARD_ACTION_GAP;
 
-        this.orderButton = CycleButton.builder((OrderType orderType) -> Component.literal(orderType.getName())).withValues(OrderType.values())
-                .withInitialValue(MusicPlayerHandler.INSTANCE.getOrderType()).create(
+        this.orderButton = CycleButton.builder((OrderType orderType) -> Component.literal(orderType.getName()),
+                        MusicPlayerHandler.INSTANCE.getOrderType()).withValues(OrderType.values())
+                .create(
                         x, y, wideButtonW, 20, Component.translatable("concerto.screen.order"),
                         (widget, orderType) -> MusicPlayerHandler.INSTANCE.setOrderType(orderType));
         this.addRenderableWidget(this.orderButton);
@@ -171,26 +176,26 @@ public class MainPlaylistScreen extends ApplyDraggedFileScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.volumeControl.collapseIfClickedOutside(mouseX, mouseY);
-        return super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubled) {
+        this.volumeControl.collapseIfClickedOutside(event.x(), event.y());
+        return super.mouseClicked(event, doubled);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
+        if (super.keyPressed(event)) {
             return true;
         }
-        if (keyCode == GLFW.GLFW_KEY_ENTER && this.searchBox.isHoveredOrFocused()) {
+        if (event.key() == GLFW.GLFW_KEY_ENTER && this.searchBox.isHoveredOrFocused()) {
             this.toggleSearch();
             return true;
         }
-        return this.searchBox.keyPressed(keyCode, scanCode, modifiers);
+        return this.searchBox.keyPressed(event);
     }
 
     @Override
-    public boolean charTyped(char chr, int modifiers) {
-        return this.searchBox.charTyped(chr, modifiers);
+    public boolean charTyped(@NotNull CharacterEvent event) {
+        return this.searchBox.charTyped(event);
     }
 
     @Override

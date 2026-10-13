@@ -125,7 +125,7 @@ public class InGameHudRenderer {
                 String[] texts = MusicPlayerHandler.INSTANCE.getDisplayTexts();
 
                 context = new GuiGraphics(Minecraft.getInstance(),
-                        ((GuiGraphicsAccessor) context).getGuiRenderState());
+                        ((GuiGraphicsAccessor) context).getGuiRenderState(), mouseX, mouseY);
 
                 if (options.displayLyrics) {
                     Vector2i pos = config.lyricsPosSupplier.getPos(scaledWidth, scaledHeight);

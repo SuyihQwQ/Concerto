@@ -9,8 +9,10 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
 import top.gregtao.concerto.core.config.ClientConfig;
@@ -36,7 +38,7 @@ public class MusicPlayerScreen extends ConcertoScreen {
     private Button previousButton;
     private Button playPauseButton;
     private Button nextButton;
-    private CycleButton<OrderType> orderButton;
+    private CycleButton<@NotNull OrderType> orderButton;
     private VolumeControlWidget volumeControl;
 
     private float rotationAngle = 0f;
@@ -79,9 +81,8 @@ public class MusicPlayerScreen extends ConcertoScreen {
         ).pos(x, y).size(ICON_BUTTON_W, 20).build();
         x += ICON_BUTTON_W + STANDARD_ACTION_GAP;
 
-        this.orderButton = CycleButton.builder((OrderType val) -> Component.literal(val.getName()))
+        this.orderButton = CycleButton.builder((OrderType val) -> Component.literal(val.getName()), MusicPlayerHandler.INSTANCE.getOrderType())
                 .withValues(OrderType.values())
-                .withInitialValue(MusicPlayerHandler.INSTANCE.getOrderType())
                 .create(x, y, actionWidth, 20, Component.translatable("concerto.screen.order"),
                         (widget, orderType) -> MusicPlayerHandler.INSTANCE.setOrderType(orderType));
         x += actionWidth + STANDARD_ACTION_GAP;
@@ -99,9 +100,9 @@ public class MusicPlayerScreen extends ConcertoScreen {
 
         int playerViewWidth = this.standardContentRight() - x - STANDARD_ACTION_GAP - ICON_BUTTON_W;
         this.playerViewButton = CycleButton.<PlayerView>builder(view -> Component.translatable(
-                        view == PlayerView.COVER ? "concerto.screen.player_view.cover" : "concerto.screen.player_view.lyrics"))
+                        view == PlayerView.COVER ? "concerto.screen.player_view.cover" : "concerto.screen.player_view.lyrics"),
+                        this.playerView)
                 .withValues(PlayerView.values())
-                .withInitialValue(this.playerView)
                 .create(x, y, playerViewWidth, 20, Component.translatable("concerto.screen.player_view"), (button, view) -> {
                     this.playerView = view;
                     ClientConfig.INSTANCE.options.displayPlayerScreenCoverAndSpectrum = view == PlayerView.COVER;
@@ -268,30 +269,30 @@ public class MusicPlayerScreen extends ConcertoScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.volumeControl.collapseIfClickedOutside(mouseX, mouseY);
-        if (button == 0 && this.isOverProgressBar(mouseX, mouseY) && this.seekProgress(mouseX, false)) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubled) {
+        this.volumeControl.collapseIfClickedOutside(event.x(), event.y());
+        if (event.button() == 0 && this.isOverProgressBar(event.x(), event.y()) && this.seekProgress(event.x(), false)) {
             this.seekingProgress = true;
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubled);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (this.seekingProgress && button == 0) {
-            return this.seekProgress(mouseX, false);
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+        if (this.seekingProgress && event.button() == 0) {
+            return this.seekProgress(event.x(), false);
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (this.seekingProgress && button == 0) {
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        if (this.seekingProgress && event.button() == 0) {
             this.seekingProgress = false;
-            return this.seekProgress(mouseX, true);
+            return this.seekProgress(event.x(), true);
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     private boolean isOverProgressBar(double mouseX, double mouseY) {
@@ -432,7 +433,7 @@ public class MusicPlayerScreen extends ConcertoScreen {
         }
 
         @Override
-        public void buildVertices(VertexConsumer vertexConsumer, float f) {
+        public void buildVertices(VertexConsumer vertexConsumer) {
             float val = Float.isNaN(this.value) ? 0f : this.value;
 
             float dynamicScale = (float) (1.3f * Math.log10(1.0 + val * 60.0));
@@ -465,10 +466,10 @@ public class MusicPlayerScreen extends ConcertoScreen {
             float x4 = this.centerX + cos2 * this.radiusInner;
             float y4 = this.centerY + sin2 * this.radiusInner;
 
-            vertexConsumer.addVertexWith2DPose(this.pose(), x1, y1, f).setColor(color);
-            vertexConsumer.addVertexWith2DPose(this.pose(), x4, y4, f).setColor(color);
-            vertexConsumer.addVertexWith2DPose(this.pose(), x3, y3, f).setColor(color);
-            vertexConsumer.addVertexWith2DPose(this.pose(), x2, y2, f).setColor(color);
+            vertexConsumer.addVertexWith2DPose(this.pose(), x1, y1).setColor(color);
+            vertexConsumer.addVertexWith2DPose(this.pose(), x4, y4).setColor(color);
+            vertexConsumer.addVertexWith2DPose(this.pose(), x3, y3).setColor(color);
+            vertexConsumer.addVertexWith2DPose(this.pose(), x2, y2).setColor(color);
         }
     }
 

@@ -204,6 +204,8 @@
   "concerto.login.kugou.error": "Error occurs while trying to login",
   "concerto.hotkey": "Concerto Hotkeys",
   "concerto.hotkey.main_music_list": "Open Main playlist",
+  "key.category.concerto.hotkey": "Concerto Hotkeys",
+  "concerto.hotkey.general_music_list": "Open General playlist",
   "concerto.hotkey.index": "Open Concerto Index Page",
   "concerto.room": "MusicRoom",
   "concerto.room.permission_denied": "Permission Denied. Please contact the operators.",

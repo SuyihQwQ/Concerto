@@ -3,8 +3,10 @@ package top.gregtao.concerto.screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -44,11 +46,11 @@ public class EditMusicTitleScreen extends ConcertoScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ENTER && this.titleInput.isFocused()) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ENTER && this.titleInput.isFocused()) {
             this.save();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 }

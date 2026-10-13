@@ -4,7 +4,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import top.gregtao.concerto.ConcertoClient;
 import top.gregtao.concerto.core.config.ClientConfig;
 
@@ -39,27 +41,27 @@ public class VolumeSliderWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!this.active || !this.visible || button != 0 || !this.isMouseOver(mouseX, mouseY)) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubled) {
+        if (!this.active || !this.visible || event.button() != 0 || !this.isMouseOver(event.x(), event.y())) {
             return false;
         }
         this.dragging = true;
-        this.updateVolume(mouseY);
+        this.updateVolume(event.y());
         return true;
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!this.dragging || button != 0) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+        if (!this.dragging || event.button() != 0) {
             return false;
         }
-        this.updateVolume(mouseY);
+        this.updateVolume(event.y());
         return true;
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (this.dragging && button == 0) {
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        if (this.dragging && event.button() == 0) {
             this.dragging = false;
             ClientConfig.INSTANCE.writeOptions();
             return true;

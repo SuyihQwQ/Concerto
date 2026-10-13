@@ -4,7 +4,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The "♪" button with its pop-up volume slider. Add via {@code addWidget} for
@@ -44,11 +46,11 @@ public class VolumeControlWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (this.slider.visible && this.slider.mouseClicked(mouseX, mouseY, mouseButton)) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubled) {
+        if (this.slider.visible && this.slider.mouseClicked(event, doubled)) {
             return true;
         }
-        return this.button.mouseClicked(mouseX, mouseY, mouseButton);
+        return this.button.mouseClicked(event, doubled);
     }
 
     // Dismiss but let the click through: swallowing it would force a second
@@ -60,13 +62,13 @@ public class VolumeControlWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double dragX, double dragY) {
-        return this.slider.visible && this.slider.mouseDragged(mouseX, mouseY, mouseButton, dragX, dragY);
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
+        return this.slider.visible && this.slider.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-        return this.slider.visible && this.slider.mouseReleased(mouseX, mouseY, mouseButton);
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        return this.slider.visible && this.slider.mouseReleased(event);
     }
 
     @Override

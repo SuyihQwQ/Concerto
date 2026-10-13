@@ -27,8 +27,9 @@ public class PlayerListMixin {
 
     @Inject(at = @At("HEAD"), method = "remove(Lnet/minecraft/server/level/ServerPlayer;)V")
     public void removeInject(ServerPlayer player, CallbackInfo ci) {
-        if (player.getServer() == null) return;
+        var server = player.level().getServer();
+        if (server == null) return;
         MusicRoom.serverOnPlayerDisconnect(player.getName().getString(),
-                MusicRoomManager.createServerBridge(player.getServer()));
+                MusicRoomManager.createServerBridge(server));
     }
 }

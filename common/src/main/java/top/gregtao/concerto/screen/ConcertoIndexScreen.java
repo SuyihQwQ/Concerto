@@ -1,6 +1,7 @@
 package top.gregtao.concerto.screen;
 
-import net.minecraft.Util;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -66,7 +67,7 @@ public class ConcertoIndexScreen extends ConcertoScreen {
                 button -> Minecraft.getInstance().setScreen(new PresetRadiosScreen(this))).active = serverAvailable;
         this.addButton(Component.translatable("concerto.screen.audition"), rightX, this.serverActionsY, buttonWidth,
                 button -> Minecraft.getInstance().setScreen(new MusicAuditionScreen(this))).active =
-                serverAvailable && player.hasPermissions(2);
+                serverAvailable && player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
         this.addButton(Component.translatable("concerto.screen.confirmation"), leftX,
                 this.serverActionsY + BUTTON_HEIGHT + ROW_GAP, buttonWidth,
                 button -> Minecraft.getInstance().setScreen(new MusicConfirmationScreen(this)));

@@ -1,9 +1,10 @@
 package top.gregtao.concerto.screen.widget;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import top.gregtao.concerto.screen.ConcertoScreen;
@@ -11,7 +12,7 @@ import top.gregtao.concerto.screen.ConcertoScreen;
 import java.util.List;
 import java.util.ListIterator;
 
-public class ConcertoListWidget<T> extends ObjectSelectionList<ConcertoListWidget<T>.Entry> {
+public class ConcertoListWidget<T> extends ObjectSelectionList<ConcertoListWidget<T>.@NotNull Entry> {
     protected int color = 0xffffffff;
 
     public ConcertoListWidget(int width, int height, int top, int itemHeight) {
@@ -61,12 +62,12 @@ public class ConcertoListWidget<T> extends ObjectSelectionList<ConcertoListWidge
     }
 
     @Override
-    public boolean removeEntryFromTop(Entry entry) {
+    public void removeEntryFromTop(Entry entry) {
         ListIterator<Entry> iterator = this.children().listIterator(entry.entryIndex + 1);
         while (iterator.hasNext()) {
             iterator.next().index--;
         }
-        return super.removeEntryFromTop(entry);
+        super.removeEntryFromTop(entry);
     }
 
     @Override
@@ -95,9 +96,9 @@ public class ConcertoListWidget<T> extends ObjectSelectionList<ConcertoListWidge
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (ConcertoListWidget.this.handleEntryClick(this, mouseX, mouseY, button)) return true;
-            if (button == 0) {
+        public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubled) {
+            if (ConcertoListWidget.this.handleEntryClick(this, event.x(), event.y(), event.button())) return true;
+            if (event.button() == 0) {
                 if (Util.getMillis() - this.lastClickTime < 250) {
                     ConcertoListWidget.this.onDoubleClicked(this);
                 } else {
@@ -115,8 +116,9 @@ public class ConcertoListWidget<T> extends ObjectSelectionList<ConcertoListWidge
         }
 
         @Override
-        public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            ConcertoListWidget.this.renderEntry(this, context, y, x, entryWidth, mouseX, mouseY, hovered, tickDelta);
+        public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+            ConcertoListWidget.this.renderEntry(this, context, this.getContentY(), this.getContentX(),
+                    ConcertoListWidget.this.getRowWidth(), mouseX, mouseY, hovered, deltaTicks);
         }
     }
 }

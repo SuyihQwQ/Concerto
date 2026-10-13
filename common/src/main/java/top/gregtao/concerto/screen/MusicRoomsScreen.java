@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import top.gregtao.concerto.core.Concerto;
 import top.gregtao.concerto.core.room.MusicRoom;
@@ -279,16 +280,16 @@ public class MusicRoomsScreen extends ConcertoScreen {
 
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0 && this.builtState == MusicRoom.ClientState.MUSIC_ROOM && MusicRoom.CLIENT_ROOM != null) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
+        if (event.button() == 0 && this.builtState == MusicRoom.ClientState.MUSIC_ROOM && MusicRoom.CLIENT_ROOM != null) {
             String uuid = MusicRoom.CLIENT_ROOM.uuid.toString();
-            if (this.isHoveringUuid(mouseX, mouseY, uuid)) {
+            if (this.isHoveringUuid(event.x(), event.y(), uuid)) {
                 Concerto.getCoreBridge().setClientClipboard(uuid);
                 Concerto.getCoreBridge().sendTranslatableToClientPlayer("concerto.room.uuid_copied", false);
                 return true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubled);
     }
 
     private boolean isHoveringUuid(double mouseX, double mouseY, String uuid) {

@@ -8,28 +8,18 @@ permissions:
 
 jobs:
   build:
-    name: Build all platforms
+    name: Build Minecraft 1.21.11 on dev
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout selected branch
+      - name: Checkout dev
         uses: actions/checkout@v4
-
-      - name: Determine JDK version
-        run: |
-          BRANCH="${GITHUB_REF_NAME}"
-          VER="${BRANCH#mc}"
-          if [[ ! "$VER" =~ ^[0-9] ]]; then
-            echo "JAVA_VER=21" >> "$GITHUB_ENV"
-          elif [ "$(printf '%s\n' "26.1.2" "$VER" | sort -V | head -n1)" = "26.1.2" ]; then
-            echo "JAVA_VER=25" >> "$GITHUB_ENV"
-          else
-            echo "JAVA_VER=21" >> "$GITHUB_ENV"
-          fi
+        with:
+          ref: dev
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VER }}
+          java-version: 21
           distribution: temurin
           cache: gradle
 
@@ -41,7 +31,7 @@ jobs:
       - name: Upload test build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: concerto-test-build-${{ github.ref_name }}-${{ github.run_number }}
+          name: concerto-test-build-mc1.21.11-${{ github.run_number }}
           path: build/libs/*.jar
           if-no-files-found: error
           retention-days: 14

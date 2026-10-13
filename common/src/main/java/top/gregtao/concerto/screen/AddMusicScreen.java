@@ -6,6 +6,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
@@ -39,6 +40,29 @@ public class AddMusicScreen extends ApplyDraggedFileScreen {
         } catch (Exception e) {
             this.displayAlert(Component.translatable("concerto.fail"));
         }
+    }
+
+    private void addLabel(Component text, int centerX, int y, Consumer<String> onClick) {
+        EditBox widget = new EditBox(this.font, centerX - 15, y, 90, 20, text);
+        widget.setMaxLength(1024);
+        StringWidget textWidget = new StringWidget(centerX - 135, y + 2, 120, 20, text, this.font);
+        Button addButton = Button.builder(Component.translatable("concerto.screen.add"),
+                button -> onClick.accept(widget.getValue())).pos(centerX + 80, y).size(60, 20).build();
+        addButton.active = PlayerPermissions.canModifyMusicList();
+        this.addRenderableWidget(widget);
+        this.addRenderableWidget(textWidget);
+        this.addRenderableWidget(addButton);
+        this.addWidget(widget);
+    }
+
+    private Consumer<String> methodSafeWrapper(Consumer<String> method) {
+        return str -> {
+            try {
+                method.accept(str);
+            } catch (Exception e) {
+                AddMusicScreen.this.displayAlert(Component.translatable("concerto.fail"));
+            }
+        };
     }
 
     @Override
@@ -149,8 +173,8 @@ public class AddMusicScreen extends ApplyDraggedFileScreen {
         }
 
         @Override
-        public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight,
-                           int mouseX, int mouseY, boolean hovered, float delta) {
+        public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float delta) {
+            int y = this.getContentY();
             int fieldX = AddMusicScreen.this.width / 2 - 20;
             graphics.drawString(AddMusicScreen.this.font, this.label,
                     fieldX - 8 - AddMusicScreen.this.font.width(this.label), y + 6, 0xffffffff, false);
